@@ -1,0 +1,10 @@
+.game-container{
+    display: flex;
+}
+.player{
+    display: flex;
+    border: 1px, solid, black;
+    width: 100px;
+    height: 100px;
+    
+  }
