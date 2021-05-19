@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import '../css/basic.css'
-import {clubs, diamonds, hearts, spades} from './deckimages.js'
-import {values} from './deckvalues.js'
+import {Clubs, Diamonds, Hearts, Spades} from './deckvalues'
+
 
 
 
@@ -14,33 +14,129 @@ export function GameFunction(){
     const [dealerCardCount, setDealerCardCount] = useState(0)
     const [turn, setTurn] = useState('')
 
-    const cardRandomizer = (deckCount) => {
-        let randomNumber = Math.floor(Math.random() * deckCount)
-        let cardValue = values[randomNumber]
-        if(cardValue === 'ace'){
-            if(playerCardCount | dealerCardCount < 11){
-            cardValue = 11
-            }
-            else{cardValue=1}
-        }
-        values.splice(randomNumber,1)
-        
-        console.log(deckCount)
-        return cardValue
-        
-        
+    const selectedClubs= []
+    const selectedDiamonds = []
+    const selectedHearts = []
+    const selectedSpades = []
+
     
-    }
+    
+    
+    
+    
+
+    const cardRandomizer = (deckCount) => {
+        let randomNumber = Math.floor(Math.random() * 4)
+        
+        while(randomNumber === 1){
+            let keys = Object.keys(Clubs)
+            let cardNumber = Math.floor(Math.random() * keys.length)
+            let selectedCard = keys[cardNumber]
+            if(selectedClubs.includes(selectedCard) === false){
+                let cardValue = Clubs[keys[cardNumber]]
+                selectedClubs.push(selectedCard)
+                
+                console.log("Clubs", selectedClubs)
+                randomNumber = 0
+                console.log("card value", cardValue)
+                return cardValue
+                }
+            else{
+                cardNumber = Math.floor(Math.random() * keys.length)
+                selectedCard = keys[cardNumber]
+                
+            }
+        }
+
+        while(randomNumber === 2){
+            let keys = Object.keys(Diamonds)
+            let cardNumber = Math.floor(Math.random() * keys.length)
+            let selectedCard = keys[cardNumber]
+            if(selectedDiamonds.includes(selectedCard) === false){
+                let cardValue = Diamonds[keys[cardNumber]]
+                selectedDiamonds.push(selectedCard)
+                
+                console.log("Diamonds", selectedDiamonds)
+                randomNumber = 0
+                console.log("card value", cardValue)
+                return cardValue
+                }
+            else{
+                cardNumber = Math.floor(Math.random() * keys.length)
+                selectedCard = keys[cardNumber]
+                
+            }
+        }
+            
+        while(randomNumber === 3){
+            let keys = Object.keys(Hearts)
+            let cardNumber = Math.floor(Math.random() * keys.length)
+            let selectedCard = keys[cardNumber]
+            if(selectedHearts.includes(selectedCard) === false){
+                let cardValue = Hearts[keys[cardNumber]]
+                selectedHearts.push(selectedCard)
+                
+                console.log("Hearts", selectedHearts)
+                randomNumber = 0
+                console.log("card value", cardValue)
+                return cardValue
+                }
+            else{
+                cardNumber = Math.floor(Math.random() * keys.length)
+                selectedCard = keys[cardNumber]
+                
+            }
+        }  
+        
+        while(randomNumber === 4){
+            let keys = Object.keys(Spades)
+            let cardNumber = Math.floor(Math.random() * keys.length)
+            let selectedCard = keys[cardNumber]
+            if(selectedSpades.includes(selectedCard) === false){
+                let cardValue = Spades[keys[cardNumber]]
+                selectedSpades.push(selectedCard)
+                console.log(cardValue)
+                console.log("Spades", selectedSpades)
+                randomNumber = 0
+                console.log("card value", cardValue)
+                return cardValue
+                }
+            else{
+                cardNumber = Math.floor(Math.random() * keys.length)
+                selectedCard = keys[cardNumber]
+                
+            }
+        }   
+            
+    }        
+            
+            // delete Spades[selected]
+            
+
+       
+
+        
+        
+        // console.log(Spades)
+    
+    
+
 
     const dealCards = () => {
-        let playerCardOne = setTimeout(cardRandomizer(),400)
-        console.log(playerCardOne, deckCount)
-        let dealerCardOne = setTimeout(cardRandomizer(),400)
-        console.log(dealerCardOne, deckCount)
-        let playerCardTwo = setTimeout(cardRandomizer(),400)
-        console.log(playerCardTwo, deckCount)
-        let dealerCardTwo = setTimeout(cardRandomizer(),400)
-        console.log(dealerCardTwo, deckCount)
+        
+        let playerCardOne = setInterval(cardRandomizer(), 1000)
+        
+        let dealerCardOne = setInterval(cardRandomizer(), 1000)
+        
+        let playerCardTwo = setInterval(cardRandomizer(), 1000)
+        
+        let dealerCardTwo = setInterval(cardRandomizer(), 1000)
+
+        console.log(playerCardOne)
+        console.log(playerCardTwo)
+        console.log(dealerCardOne)
+        console.log(dealerCardTwo)
+        
         
         
         
@@ -49,7 +145,7 @@ export function GameFunction(){
     }
     
     const hitHandler = () => {
-    
+        let deckCount = 52
         let selectedCard = Math.floor(Math.random() * deckCount)
         console.log(deckCount)
         console.log(selectedCard)
