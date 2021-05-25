@@ -1,0 +1,10 @@
+#gameboard{
+    display: flex;
+    flex-direction: row;
+}
+
+.board-card-holder{
+    height: 150px;
+    width: 100px;
+    border: solid black 1px;
+}
