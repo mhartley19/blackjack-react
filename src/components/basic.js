@@ -62,6 +62,7 @@ let deck = {
 
 let playerCount = 0
 let dealerCount = 0
+let playerTurn = true
 
 export function GameFunction(){
 
@@ -76,26 +77,34 @@ export function GameFunction(){
 
     const dealCards = () => {
         let deckCount = Object.keys(deck).length
+        // console.log('deck count before deal', deckCount)
         let playerCardOne = cardRandomizer(deckCount)
+        console.log('player card one', playerCardOne)
         playerCount += deck[playerCardOne]
         delete deck[playerCardOne]
+        // console.log('deck count after pc1', deckCount)
         
         deckCount = Object.keys(deck).length
         let dealerCardOne = cardRandomizer(deckCount)
+        console.log('dealer card one', dealerCardOne)
         dealerCount += deck[dealerCardOne]
         delete deck[dealerCardOne]
+        // console.log('deck count after dc1', deckCount)
         
         deckCount = Object.keys(deck).length
         let playerCardTwo = cardRandomizer(deckCount)
         playerCount += deck[playerCardTwo]
         console.log(playerCardTwo , 'player count',playerCount)
         delete deck[playerCardTwo]
+        // console.log('deck count after pc2', deckCount)
         
         deckCount = Object.keys(deck).length
         let dealerCardTwo = cardRandomizer(deckCount)
         dealerCount += deck[dealerCardTwo]
         console.log(dealerCardTwo , 'dealer count', dealerCount)
         delete deck[dealerCardTwo]
+        
+        // console.log('deck count after dc2' ,deckCount)
         
         
         
@@ -104,12 +113,21 @@ export function GameFunction(){
 
     const hitHandler = () => {
         let deckCount = Object.keys(deck).length
-        console.log(deckCount)
+        console.log('Deck Count', deckCount)
         let hitCard = cardRandomizer(deckCount)
-        console.log(hitCard)
+        if(deck[hitCard] === 1 && playerCount <= 10){
+            console.log("ace detected")
+            playerCount += 10
+            console.log("Player count after ace", playerCount)
+
+        }
+        console.log("Hit cards", hitCard)
         playerCount += deck[hitCard]
         console.log('player count', playerCount)
         delete deck[hitCard]
+
+        
+
         if(playerCount > 21){
             console.log('Player busts, dealer wins')
             dealerCount = 0
@@ -117,32 +135,50 @@ export function GameFunction(){
         }
     }
     const stayHandler = () => {
-        console.log(dealerCount)
+        console.log('dealer count', dealerCount)
         let deckCount = Object.keys(deck).length
-        if(dealerCount < 17){
+        while(dealerCount < 17){
         let dealerHitCard = cardRandomizer(deckCount)
-        console.log(dealerHitCard)
-        dealerCount += deck[dealerHitCard]
-        console.log(dealerCount)
-        delete deck[dealerHitCard]
+        console.log('dealer hit card', dealerHitCard)
+        if(deck[dealerHitCard] === 1 && dealerCount <= 10){
+            console.log("ace detected")
+            dealerCount += 10
+            console.log('dealer count after ace', dealerCount)
+
         }
-        else if(dealerCount > 21){
+        dealerCount += deck[dealerHitCard]
+        console.log('card value', deck[dealerHitCard])
+        console.log('dealer count',dealerCount)
+        delete deck[dealerHitCard]
+        deckCount = Object.keys(deck).length
+        console.log("deck count", deckCount)
+
+        
+        }
+
+        if(dealerCount > 21){
             console.log('Dealer Busts, Player Wins')
         }
-        else if(playerCount > dealerCount){
+
+        if(playerCount > dealerCount){
             console.log('player wins')
         }
 
-        else if(dealerCount > playerCount){
-            console.lof('dealer wins')
+        if(playerCount === dealerCount && playerCount < 22){
+            console.log("Push")
         }
 
-        else{
+        if(dealerCount <= 21 && dealerCount > playerCount){
             console.log('dealer wins')
         }
+        
+
+        
+        
 
         dealerCount = 0
         playerCount = 0
+
 
     }
     
