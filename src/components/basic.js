@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import '../css/basic.css'
+import cardImages from './cardImages/index.js'
 import {Deck} from './deckvalues'
+
 
 
 let deck = {
@@ -60,59 +62,6 @@ let deck = {
 
 }
 
-let allDeckImages = [
-    "cardImages/2OfClubs.png",
-    "cardImages/3OfClubs.png",
-    "cardImages/4OfClubs.png",
-    "cardImages/5OfClubs.png",
-    "cardImages/6OfClubs.png",
-    "cardImages/7OfClubs.png",
-    "cardImages/8OfClubs.png",
-    "cardImages/9OfClubs.png",
-    "cardImages/10OfClubs.png",
-    "cardImages/jackOfClubs.png",
-    "cardImages/queenOfClubs.png",
-    "cardImages/kingOfClubs.png",
-    "cardImages/aceOfClubs.png",
-    "cardImages/2OfDiamonds.png",
-    "cardImages/3OfDiamonds.png",
-    "cardImages/4OfDiamonds.png",
-    "cardImages/5OfDiamonds.png",
-    "cardImages/6OfDiamonds.png",
-    "cardImages/7OfDiamonds.png",
-    "cardImages/8OfDiamonds.png",
-    "cardImages/9OfDiamonds.png",
-    "cardImages/10OfDiamonds.png",
-    "cardImages/jackOfDiamonds.png",
-    "cardImages/queenOfDiamonds.png",
-    "cardImages/kingOfDiamonds.png",
-    "cardImages/aceOfDiamonds.png",
-    "cardImages/2OfHearts.png",
-    "cardImages/3OfHearts.png",
-    "cardImages/4OfHearts.png",
-    "cardImages/5OfHearts.png",
-    "cardImages/6OfHearts.png",
-    "cardImages/7OfHearts.png",
-    "cardImages/8OfHearts.png",
-    "cardImages/9OfHearts.png",
-    "cardImages/10OfHearts.png",
-    "cardImages/jackOfHearts.png",
-    "cardImages/queenOfHearts.png",
-    "cardImages/kingOfHearts.png",
-    "cardImages/aceOfHearts.png",
-    "cardImages/2OfSpades.png",
-    "cardImages/3OfSpades.png",
-    "cardImages/4OfSpades.png",
-    "cardImages/5OfSpades.png",
-    "cardImages/6OfSpades.png",
-    "cardImages/7OfSpades.png",
-    "cardImages/8OfSpades.png",
-    "cardImages/9OfSpades.png",
-    "cardImages/10OfSpades.png",
-    "cardImages/jackOfSpades.png",
-    "cardImages/queenOfSpades.png",
-    "cardImages/kingOfSpades.png",
-    "cardImages/aceOfSpades.png"]
 
 
 
@@ -130,7 +79,10 @@ export function GameFunction(){
         let keys = Object.keys(deck)
         let selectedKey = keys[randomNum]
         card.push(selectedKey)
-        card.push(allDeckImages[randomNum])
+        card.push(randomNum)
+        console.log("Card Images length", cardImages.length)
+        console.log('random num', randomNum)
+        console.log(card)
         return card
         
     }
@@ -142,11 +94,17 @@ export function GameFunction(){
 
         //Image handling
         let playerCardOne = cardRandomizer(deckCount)
+        console.log(playerCardOne)
         let playerCardOneId = document.getElementById("pc1")
         let playerCardOneImg = document.createElement('img')
-        playerCardOneImg.src = playerCardOne[1]
+        
+        
+        console.log("deck count",deckCount)
+        playerCardOneImg.src = cardImages[playerCardOne[1]]
         console.log(playerCardOneImg.src)
         playerCardOneId.append(playerCardOneImg)
+        
+        
 
         // logic and value handling
         if(deck[playerCardOne[0]] === 1 && playerCount <= 10){
@@ -157,16 +115,21 @@ export function GameFunction(){
         }
         console.log('player card one', playerCardOne[0])
         playerCount += deck[playerCardOne[0]]
+        cardImages.splice(playerCardOne[1],1)
         delete deck[playerCardOne[0]]
         deckCount = Object.keys(deck).length
 
         // CARD 2
 
         let dealerCardOne = cardRandomizer(deckCount)
+        console.log(dealerCardOne)
         let dealerCardOneId = document.getElementById("dc1")
         let dealerCardOneImg = document.createElement('img')
-        dealerCardOneImg.src = dealerCardOne[1]
+        console.log("deck count",deckCount)
+        dealerCardOneImg.src = cardImages[dealerCardOne[1]]
+        console.log(dealerCardOneImg.src)
         dealerCardOneId.append(dealerCardOneImg)
+        
 
 
         console.log('dealer card one', dealerCardOne[0])
@@ -177,16 +140,21 @@ export function GameFunction(){
             console.log("Dealer count after ace", dealerCount)
 
         }
-        delete deck[dealerCardOne]
+        cardImages.splice(dealerCardOne[1],1)
+        delete deck[dealerCardOne[0]]
         deckCount = Object.keys(deck).length
 
         //CARD 3
     
         let playerCardTwo = cardRandomizer(deckCount)
+        console.log(playerCardTwo)
         let playerCardTwoId = document.getElementById("pc2")
         let playerCardTwoImg = document.createElement('img')
-        playerCardTwoImg.src = playerCardTwo[1]
+        console.log("deck count",deckCount)
+        playerCardTwoImg.src = cardImages[playerCardTwo[1]]
+        console.log(playerCardTwoImg.src)
         playerCardTwoId.append(playerCardTwoImg)
+        
 
 
         if(deck[playerCardTwo[0]] === 1 && playerCount <= 10){
@@ -197,16 +165,21 @@ export function GameFunction(){
         }
         playerCount += deck[playerCardTwo[0]]
         console.log(playerCardTwo[0] , 'player count',playerCount)
+        cardImages.splice(playerCardTwo[1],1)
         delete deck[playerCardTwo[0]]
         deckCount = Object.keys(deck).length
 
         //card4
         
         let dealerCardTwo = cardRandomizer(deckCount)
+        console.log(dealerCardTwo)
         let dealerCardTwoId = document.getElementById("dc2")
         let dealerCardTwoImg = document.createElement('img')
-        dealerCardTwoImg.src = dealerCardTwo[1]
+        console.log("deck count",deckCount)
+        dealerCardTwoImg.src = cardImages[dealerCardTwo[1]]
+        console.log(dealerCardTwoImg.src)
         dealerCardTwoId.append(dealerCardTwoImg)
+        
         if(deck[dealerCardTwo[0]] === 1 && dealerCount <= 10){
             console.log("ace detected")
             dealerCount += 10
@@ -215,6 +188,7 @@ export function GameFunction(){
         }
         dealerCount += deck[dealerCardTwo[0]]
         console.log(dealerCardTwo[0] , 'dealer count',dealerCount)
+        cardImages.splice(dealerCardTwo[1],1)
         delete deck[dealerCardTwo[0]]
         
         // console.log('deck count after dc2' ,deckCount)
@@ -307,7 +281,7 @@ return(
 
 </div>
 <div id='gameboard'>
-<div id='pc1' class='board-card-holder'> <img src='src/components/cardImages/2OfClubs.png'></img></div>
+<div id='pc1' class='board-card-holder'> </div>
 <div id='pc2' class='board-card-holder'>pc2</div>
 <div id='dc1' class='board-card-holder'>dc1</div>
 <div id='dc2' class='board-card-holder'>dc2</div>
