@@ -71,8 +71,10 @@ let playerTurn = true
 
 export const GameFunction = () => {
 
-    const[playerCount, setPlayerCount] = useState(100)
+    const[playerCount, setPlayerCount] = useState(0)
     const[dealerCount, setDealerCount] = useState(0)
+    const[hitCardCount, setHitCardCount] = useState(0)
+
     
     const cardRandomizer = (deckCount) => {
         let card = []
@@ -81,155 +83,151 @@ export const GameFunction = () => {
         let selectedKey = keys[randomNum]
         card.push(selectedKey)
         card.push(randomNum)
+
         return card
-        
     }
+    const imageHelper = (playerCard, id) => {
+
+        let cardId = document.getElementById(id)
+        let cardImgElement = document.createElement('img')
+        cardImgElement.src = cardImages[playerCard[1]]
+        cardId.append(cardImgElement)
+
+    }
+        
+    
 
     const dealCards = () => {
+        let pCount = 0
+        let dCount = 0
         let deckCount = Object.keys(deck).length
 
         // CARD 1
 
-        //Image handling
-        let playerCardOne = cardRandomizer(deckCount)
-        let playerCardOneId = document.getElementById("pc1")
-        let playerCardOneImg = document.createElement('img')
-        playerCardOneImg.src = cardImages[playerCardOne[1]]
-        console.log(playerCardOneImg.src)
-        playerCardOneId.append(playerCardOneImg)
+       
+        let card = cardRandomizer(deckCount)
+        imageHelper(card, "pc1")
         
         
-
-        // logic and value handling
-        if(deck[playerCardOne[0]] === 1 && playerCount <= 10){
+        if(deck[card[0]] === 1 && playerCount <= 10){
             console.log("ace detected")
-            setPlayerCount(pc => pc + 10)
+            pCount += 10
             console.log("Player count after ace", playerCount)
-
         }
-        console.log(playerCount + deck[playerCardOne[0]])
-        setPlayerCount(pc => pc + deck[playerCardOne[0]])
-        console.log('Player count after card one',playerCount)
+
+        pCount += deck[card[0]]
+        cardImages.splice(card[1],1)
+        delete deck[card[0]]
         
-        cardImages.splice(playerCardOne[1],1)
-        delete deck[playerCardOne[0]]
+        // CARD 2
         
         deckCount = Object.keys(deck).length
-
-        // CARD 2
-
-        let dealerCardOne = cardRandomizer(deckCount)
-        let dealerCardOneId = document.getElementById("dc1")
-        let dealerCardOneImg = document.createElement('img')
-        dealerCardOneImg.src = cardImages[dealerCardOne[1]]
-        dealerCardOneId.append(dealerCardOneImg)
+        card = cardRandomizer(deckCount)
+        imageHelper(card, "dc1")
         
-        
-        
-        if(deck[dealerCardOne[0]] === 1 && dealerCount <= 10){
+        if(deck[card[0]] === 1 && dealerCount <= 10){
             console.log("ace detected")
-            setDealerCount(dealerCount + 10)
+            dCount += 10
             console.log("Dealer count after ace", dealerCount)
 
         }
-        setDealerCount(dealerCount + deck[dealerCardOne[0]])
-        console.log('Delaer count after card one',dealerCount)
-        cardImages.splice(dealerCardOne[1],1)
-        delete deck[dealerCardOne[0]]
+        dCount += deck[card[0]]
+        
+        cardImages.splice(card[1],1)
+        delete deck[card[0]]
         deckCount = Object.keys(deck).length
 
         //CARD 3
+
+        card = cardRandomizer(deckCount)
+        imageHelper(card, "pc2")
     
-        let playerCardTwo = cardRandomizer(deckCount)
-        let playerCardTwoId = document.getElementById("pc2")
-        let playerCardTwoImg = document.createElement('img')
-        playerCardTwoImg.src = cardImages[playerCardTwo[1]]
-        playerCardTwoId.append(playerCardTwoImg)
-        
-
-
-        if(deck[playerCardTwo[0]] === 1 && playerCount <= 10){
+    
+        if(deck[card[0]] === 1 && playerCount <= 10){
             console.log("ace detected")
-            setPlayerCount(pc => pc + 10)
+            pCount += 10
             console.log("Player count after ace", playerCount)
 
         }
-        setPlayerCount(pc => pc + deck[playerCardTwo[0]])
-        console.log('Player count after card two',playerCount)
-        cardImages.splice(playerCardTwo[1],1)
-        delete deck[playerCardTwo[0]]
+        pCount += deck[card[0]]
+       
+        // console.log('Player count after card two',playerCount)
+        cardImages.splice(card[1],1)
+        delete deck[card[0]]
         deckCount = Object.keys(deck).length
 
         //card4
+
+        card = cardRandomizer(deckCount)
+        imageHelper(card, "dc2")
         
-        let dealerCardTwo = cardRandomizer(deckCount)
+    
         
-        let dealerCardTwoId = document.getElementById("dc2")
-        let dealerCardTwoImg = document.createElement('img')
-        
-        dealerCardTwoImg.src = cardImages[dealerCardTwo[1]]
-        
-        dealerCardTwoId.append(dealerCardTwoImg)
-        
-        if(deck[dealerCardTwo[0]] === 1 && dealerCount <= 10){
+        if(deck[card[0]] === 1 && dealerCount <= 10){
             console.log("ace detected")
-            setDealerCount(dealerCount + 10)
+            dCount += 10
             console.log('Delaer count after card ace',dealerCount)
             
 
         }
-        console.log(deck[dealerCardTwo[0]])
-        console.log(dealerCount + deck[dealerCardTwo[0]])
-        setDealerCount(dealerCount + deck[dealerCardTwo[0]])
-        console.log('Delaer count after card two',dealerCount)
-        cardImages.splice(dealerCardTwo[1],1)
-        delete deck[dealerCardTwo[0]]
+        dCount += deck[card[0]]
+        cardImages.splice(card[1],1)
+        delete deck[card[0]]
         
-        // console.log('deck count after dc2' ,deckCount)
-        
-        
-        
+        setPlayerCount(c => c + pCount)
+        setDealerCount(c => c + dCount)
        
     }
 
     const hitHandler = () => {
         let deckCount = Object.keys(deck).length
-        console.log('Deck Count', deckCount)
-        let hitCard = cardRandomizer(deckCount)
-        if(deck[hitCard[0]] === 1 && playerCount <= 10){
+        let card = cardRandomizer(deckCount)
+        imageHelper(card, "hitcards")
+        let pCount = playerCount
+    
+        if(deck[card[0]] === 1 && playerCount <= 10){
             console.log("ace detected")
-            setPlayerCount(playerCount + 10)
-            console.log("Player count after ace", playerCount)
+            pCount += 10
+            
+            
 
         }
-        console.log("Hit cards", hitCard[0])
-        setPlayerCount(playerCount + deck[hitCard[0]])
+        console.log("Hit card", card)
+        pCount += deck[card[0]]
         console.log('player count', playerCount)
-        delete deck[hitCard]
+        delete deck[card]
 
-        
-
-        if(playerCount > 21){
+        if(pCount > 21){
+            console.log(pCount)
             console.log('Player busts, dealer wins')
-            dealerCount = 0
-            playerCount = 0
+            
         }
+
+        setHitCardCount(h => h + 1)
+        setPlayerCount(pCount)
     }
     const stayHandler = () => {
-        console.log('dealer count', dealerCount)
+        let pCount = playerCount
+        let dCount = dealerCount
+        console.log(dCount)
+        // console.log('dealer count', dealerCount)
         let deckCount = Object.keys(deck).length
-        while(dealerCount < 17){
+        while(dCount < 17){
         let dealerHitCard = cardRandomizer(deckCount)
         console.log('dealer hit card', dealerHitCard)
-        if(deck[dealerHitCard[0]] === 1 && dealerCount <= 10){
+        if(deck[dealerHitCard[0]] === 1 && dCount <= 10){
             console.log("ace detected")
-            setDealerCount(dealerCount+ 10)
-            console.log('dealer count after ace', dealerCount)
+            // setDealerCount(dealerCount+ 10)
+            console.log('dealer count after ace', dCount)
 
         }
-        setDealerCount(dealerCount + deck[dealerHitCard[0]])
+
+
+
         console.log('card value', deck[dealerHitCard[0]])
         console.log('dealer count',dealerCount)
+        dCount += deck[dealerHitCard[0]]
+        console.log('dcount', dCount)
         delete deck[dealerHitCard[0]]
         deckCount = Object.keys(deck).length
         console.log("deck count", deckCount)
@@ -237,24 +235,25 @@ export const GameFunction = () => {
         
         }
 
-        if(dealerCount > 21){
+        if(dCount > 21){
             console.log('Dealer Busts, Player Wins')
         }
 
-        if(playerCount > dealerCount){
+        if(pCount < 22 && pCount > dCount){
             console.log('player wins')
         }
 
-        if(playerCount === dealerCount && playerCount <= 21){
+        if(pCount === dCount && pCount <= 21){
             console.log("Push")
         }
 
-        if(dealerCount <= 21 && dealerCount > playerCount){
+        if(dCount <= 21 && dCount > pCount){
             console.log('dealer wins')
         }
         
 
-        
+        setPlayerCount(pCount)
+        setDealerCount(dCount)
         
 
     
@@ -264,22 +263,31 @@ export const GameFunction = () => {
     console.log(playerCount, dealerCount)
 return(
     <div id='game-container'>
-<div id='p1' class='player'>Player: {playerCount}
+
 {/* <div class='drawnCards'>{playerCards.map(m => <div>{m}</div>)}cards</div> */}
 <button id="Random Card Func" onClick={cardRandomizer}>Random Card func</button>
 <button id="Deal-Cards" onClick={dealCards}>Deal Cards</button>
 <button id="Draw-Button" class='playerbutton' onClick={hitHandler}>Hit</button>
 <button id="Stay-Button" class='playerbutton' onClick={stayHandler}>Stay</button>
 
-</div>
+
 <div id='gameboard'>
-<div id='pc1' class='board-card-holder'> </div>
-<div id='pc2' class='board-card-holder'></div>
-<div id='dc1' class='board-card-holder'></div>
-<div id='dc2' class='board-card-holder'></div>
+<div id='section' class='dealer-card-section'>
+        <div id='dc1' class='board-card-holder'></div>      
+        <div id='dc2' class='board-card-holder'></div>
+        <div id='dealer'>Dealer: {dealerCount} </div> 
+    </div>
+    <div id='section' class='player-card-section'>
+        <div id='pc1' class='board-card-holder'> </div>
+        <div id='pc2' class='board-card-holder'></div>
+        <div id='hitcards' class='board-card-holder'></div>
+        <div id='p1' class='player'>Player: {playerCount}</div>
+    </div>
+     
+    
 </div>
 
-<div id='dealer'>Dealer: {dealerCount} </div>
+
 
 </div>
 
