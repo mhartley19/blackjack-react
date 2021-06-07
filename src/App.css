@@ -1,3 +1,7 @@
+/* #dc1{
+    display: none;
+} */
+
 #gameboard{
     display: flex;
     flex-direction: column;
@@ -14,13 +18,35 @@
     
 }
 
+.dealerCards , .playerCards{
+    display:flex;
+    flex-direction: row;
+}
+
+#dealerhitcards, #playerhitcards {
+    display:flex;
+    flex-direction: row;
+}
+
+
 .board-card-holder{
     height: 150px;
     width: 100px;
     border: solid black 1px;
 }
 
+.player{
+
+    height: 20px;
+
+}
+
 img {
     height:150px;
     width: 100px;
 }
+
+.hidden-first-card{
+    display: none
+}
+
