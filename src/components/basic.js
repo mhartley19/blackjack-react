@@ -82,6 +82,7 @@ export const GameFunction = () => {
     const[dealerBlackJack, setDealerBlackJack] = useState(false)
     const[playerAce, setPlayerAce] = useState(false)
     const[dealerAce, setDealerAce] = useState(false)
+    const[playerAceBust, setPlayerAceBust] = useState(false)
 
     
     const cardRandomizer = (deckCount) => {
@@ -234,12 +235,19 @@ export const GameFunction = () => {
         let pCount = playerCount
         let PACount = playerAceCount
         let hitCard = deck[card[0]]
-        let aceBust = false
         pCount += hitCard
+        let aceBust = ''
         cardImages.splice(card[1],1)
-        console.log('deck length before delete', Object.keys(deck).length)
         delete deck[card[0]]
-        console.log('deck length after delete', Object.keys(deck).length)
+
+        if(playerAceBust){
+            aceBust = true
+        }
+        else {
+            aceBust = false
+        }
+        
+        
 
         console.log( PACount, hitCard, pCount, aceBust)
 
@@ -280,6 +288,7 @@ export const GameFunction = () => {
         setPlayerCount(pCount)
         setPlayerTurn(pTurn)
         setPlayerAceCount(PACount)
+        setPlayerAceBust(aceBust)
 
         console.log('after set state', playerCount, playerTurn, setPlayerAceCount)
 
@@ -291,30 +300,39 @@ export const GameFunction = () => {
         let pCount = playerCount
         let dCount = dealerCount
         let DACount = dealerAceCount
+        let aceBust = false
        
         
         
         while(dCount < 17 && !playerBlackJack){
         let card = cardRandomizer(deckCount)
+        let hitCard = deck[card[0]]
+        dCount += hitCard
         
-        if(DACount > 0 && (deck[card[0]] + dCount > 21)){
-            console.log("ace detected")
-            dCount -= 10
-           
-
-        }
-
-        if(DACount === 0 && deck[card[0]] === 11 && dCount > 10){
-
-            dCount -= 10
+        if(hitCard === 11){
             DACount += 1
-            console.log('pCount', pCount)
-          
+            console.log(DACount)
+            if(dCount > 21){
+                aceBust = true
+            }
+        }
+    
+        if(!aceBust && dCount > 21 && DACount > 0){
+            dCount -= 10
+            aceBust = true
+            console.log(dCount, aceBust)
         }
 
-        imageHelper(card,'dealerhitcards')
+        if(aceBust && hitCard === 11){
+            dCount -=10
+        }
+       
 
-        dCount += deck[card[0]]
+    
+
+        setTimeout(imageHelper(card,'dealerhitcards'), 1000)
+
+        
         cardImages.splice(card[1],1)
         delete deck[card[0]]
         deckCount = Object.keys(deck).length
