@@ -78,6 +78,8 @@ export const GameFunction = () => {
     const[newGame, setNewGame] = useState(true)
     const[playerAceCount, setPlayerAceCount] = useState(0)
     const[dealerAceCount, setDealerAceCount] = useState(0)
+    const[playerBlackJack, setPlayerBlackJack] = useState(false)
+    const[dealerBlackJack, setDealerBlackJack] = useState(false)
     const[playerAce, setPlayerAce] = useState(false)
     const[dealerAce, setDealerAce] = useState(false)
 
@@ -111,6 +113,9 @@ export const GameFunction = () => {
         let dCount = 0
         let PACount = 0
         let DACount = 0
+        let pTurn = true
+        let dealerBJ = false
+        let playerBJ = false
         let deckCount = Object.keys(deck).length
 
         // CARD 1
@@ -123,7 +128,7 @@ export const GameFunction = () => {
         if(deck[card[0]] === 11){
             console.log("ace detected")
             PACount += 1
-            console.log("Player count after ace", playerCount)
+            console.log("PACount", PACount)
         }
 
         pCount += deck[card[0]]
@@ -139,7 +144,7 @@ export const GameFunction = () => {
         if(deck[card[0]] === 11){
             console.log("ace detected")
             DACount += 1
-            console.log("Dealer count after ace", dealerCount)
+            console.log("DACount", DACount)
 
         }
         dCount += deck[card[0]]
@@ -158,7 +163,7 @@ export const GameFunction = () => {
         if(deck[card[0]] === 11){
             console.log("ace detected")
             PACount += 1
-            console.log("Player count after ace", playerCount)
+            console.log("PACount", PACount)
 
         }
         pCount += deck[card[0]]
@@ -177,7 +182,8 @@ export const GameFunction = () => {
         
         if(deck[card[0]] === 11){
             console.log("ace detected")
-            DACount +=1
+            DACount += 1
+            console.log("DACount", DACount)
             
         }
         dCount += deck[card[0]]
@@ -191,66 +197,125 @@ export const GameFunction = () => {
         if(PACount === 2){
             pCount -= 10
         }
+
+        if(dCount === 21){
+            dealerBJ = true
+            pTurn = false
+
+
+        }
+
+        if(pCount === 21){
+            playerBJ = true
+            pTurn = false
+        }
         
+        console.log(playerBJ, dealerBJ)
         setPlayerCount(c => c + pCount)
         setDealerCount(c => c + dCount)
-        setPlayerAceCount(a => a + PACount)
-        setDealerAceCount(a => a + DACount)
+        setPlayerAceCount(PACount)
+        setDealerAceCount(DACount)
+        setDealerBlackJack(dealerBJ)
+        setPlayerBlackJack(playerBJ)
+        setPlayerTurn(pTurn)
         setNewGame(false)
+
+        
     }
+
+    console.log('ace counts', playerAceCount, dealerAceCount)
 
     const hitHandler = () => {
         let deckCount = Object.keys(deck).length
+        console.log('hit handler deck count', deckCount)
         let card = cardRandomizer(deckCount)
         imageHelper(card, "playerhitcards")
+        let pTurn = true
         let pCount = playerCount
         let PACount = playerAceCount
-        let DACount = dealerAceCount
-    
-        if(PACount > 0 && card[0] + pCount > 21){
-            console.log("ace detected")
-            pCount -= 10
+        let hitCard = deck[card[0]]
+        let aceBust = false
+        pCount += hitCard
+        cardImages.splice(card[1],1)
+        console.log('deck length before delete', Object.keys(deck).length)
+        delete deck[card[0]]
+        console.log('deck length after delete', Object.keys(deck).length)
 
-        }
+        console.log( PACount, hitCard, pCount, aceBust)
 
-        if(PACount === 0 && card[0] === 11 && pCount > 10){
-            pCount -= 10
+        if(hitCard === 11){
             PACount += 1
+            console.log(PACount)
+            if(pCount > 21){
+                aceBust = true
+            }
         }
-        pCount += deck[card[0]]
-        delete deck[card]
+    
+        if(!aceBust && pCount > 21 && PACount > 0){
+            pCount -= 10
+            aceBust = true
+            console.log(pCount, aceBust)
+        }
+
+        if(aceBust && hitCard === 11){
+            pCount -=10
+        }
+
+       
+       
+        
 
         if(pCount > 21){
             console.log(pCount)
             console.log('Player busts, dealer wins')
-            setPlayerTurn(false)
+            pTurn = false
             
+        }
+
+        if(pCount === 21){
+            pTurn = false
         }
 
         setHitCardCount(h => h + 1)
         setPlayerCount(pCount)
+        setPlayerTurn(pTurn)
+        setPlayerAceCount(PACount)
+
+        console.log('after set state', playerCount, playerTurn, setPlayerAceCount)
 
        
     }
     const stayHandler = () => {
         
+        let deckCount = Object.keys(deck).length
         let pCount = playerCount
         let dCount = dealerCount
-        let deckCount = Object.keys(deck).length
+        let DACount = dealerAceCount
+       
         
-        while(dCount < 17){
+        
+        while(dCount < 17 && !playerBlackJack){
         let card = cardRandomizer(deckCount)
         
-        if(deck[card[0]] === 1 && dCount <= 10){
+        if(DACount > 0 && (deck[card[0]] + dCount > 21)){
             console.log("ace detected")
-            // setDealerCount(dealerCount+ 10)
-            console.log('dealer count after ace', dCount)
+            dCount -= 10
+           
 
+        }
+
+        if(DACount === 0 && deck[card[0]] === 11 && dCount > 10){
+
+            dCount -= 10
+            DACount += 1
+            console.log('pCount', pCount)
+          
         }
 
         imageHelper(card,'dealerhitcards')
 
         dCount += deck[card[0]]
+        cardImages.splice(card[1],1)
         delete deck[card[0]]
         deckCount = Object.keys(deck).length
         setPlayerTurn(false)
@@ -265,7 +330,7 @@ export const GameFunction = () => {
 
 
     }
-    console.log(playerCount, dealerCount, playerTurn, newGame, hitCardCount)
+    console.log(playerCount, dealerCount, playerTurn, newGame, hitCardCount, playerBlackJack, dealerBlackJack)
 return(
     <div id='game-container'>
 
@@ -291,7 +356,7 @@ return(
         <div class='playerCards'>
         <div id='pc1' class='board-card-holder'> </div>
         <div id='pc2' class='board-card-holder'></div>
-        <div id='playerhitcards' class='board-card-holder'></div>}
+        <div id='playerhitcards' class='board-card-holder'></div>
         </div>
     </div>
         <div id='p1' class='player'>Player: {playerCount}</div>
@@ -299,9 +364,13 @@ return(
     {!newGame & playerCount < 21 ? <button id="Draw-Button" class='playerbutton' onClick={hitHandler}>Hit</button>: null}
     {!newGame & playerCount <= 21 ? <button id="Stay-Button" class='playerbutton' onClick={stayHandler}>Stay</button>: null}
     {playerCount > 21 ? <h1>Player Busts!</h1>:null}
-    {playerCount > dealerCount & dealerCount >= 17 & playerCount <= 21 ? <h1>Player Wins!</h1>: null}
+    {!playerTurn & (playerCount > dealerCount) & dealerCount >= 17 & playerCount <= 21 ? <h1>Player Wins!</h1>: null}
     {dealerCount > 21 ? <h1>Dealer Busts, Player Wins!</h1>: null}
-    {dealerCount > playerCount & dealerCount <= 21 ? <h1>Dealer Wins!</h1>: null}
+    {!playerTurn & dealerCount > playerCount & dealerCount <= 21 ? <h1>Dealer Wins!</h1>: null}
+    {dealerBlackJack ? <h1>BlackJack!</h1>: null}
+    {playerBlackJack ? <h1>BlackJack! Player Wins</h1>: null}
+    {playerBlackJack & dealerBlackJack ? <h1>Push</h1>: null}
+    {!playerTurn & playerCount === dealerCount & playerCount >= 17 & dealerCount >= 17 ? <h1>Push</h1> : null}
      
     
 </div>
