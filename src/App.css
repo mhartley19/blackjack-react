@@ -1,7 +1,9 @@
 /* #dc1{
     display: none;
 } */
-
+:root{
+    background-color: green;
+}
 #gameboard{
     display: flex;
     flex-direction: column;
@@ -35,11 +37,19 @@
     border: solid black 1px;
 }
 
+.game-buttons{
+    display: flex;
+}
+
 .player{
 
     height: 20px;
 
 }
+
+/* .playerbutton{
+    margin:5px
+} */
 
 img {
     height:150px;
