@@ -71,7 +71,6 @@ export const GameFunction = () => {
     
     const[playerCount, setPlayerCount] = useState(0)
     const[dealerCount, setDealerCount] = useState(0)
-    const[hitCardCount, setHitCardCount] = useState(0)
     const[playerTurn, setPlayerTurn] = useState(true)
     const[newGame, setNewGame] = useState(true)
     const[endGame, setEndGame] = useState(false)
@@ -138,6 +137,8 @@ export const GameFunction = () => {
         let dCount = 0
         let PACount = 0
         let DACount = 0
+        let winnings = 0
+        let end = false
         let pTurn = true
         let dealerBJ = false
         let playerBJ = false
@@ -210,16 +211,19 @@ export const GameFunction = () => {
             pCount -= 10
         }
 
-        if(dCount === 21){
+        if(dCount === 21 && pCount < 21){
             dealerBJ = true
             pTurn = false
+            end = true
 
 
         }
 
-        if(pCount === 21){
+        if(pCount === 21 && dCount < 21){
             playerBJ = true
             pTurn = false
+            winnings += betAmount * 2.5
+            end = true
         }
         
         console.log(playerBJ, dealerBJ)
@@ -230,7 +234,10 @@ export const GameFunction = () => {
         setDealerBlackJack(dealerBJ)
         setPlayerBlackJack(playerBJ)
         setPlayerTurn(pTurn)
+        setPlayerChips(c => c += winnings)
         setNewGame(false)
+        setEndGame(end)
+
 
         
     }
@@ -288,6 +295,7 @@ export const GameFunction = () => {
             console.log(pCount)
             console.log('Player busts, dealer wins')
             pTurn = false
+            setEndGame(true)
             
         }
 
@@ -295,7 +303,7 @@ export const GameFunction = () => {
             pTurn = false
         }
 
-        setHitCardCount(h => h + 1)
+        
         setPlayerCount(pCount)
         setPlayerTurn(pTurn)
         setPlayerAceCount(PACount)
@@ -357,14 +365,15 @@ export const GameFunction = () => {
         }
 
         if(pCount === dCount && dCount <= 21 && pCount <= 21){
-            winnings = betAmount
+            winnings += betAmount * 1
+            console.log("Push winnings", winnings)
         }
         setPlayerTurn(false)
         setPlayerCount(pCount)
         setDealerCount(dCount)
         setPlayerChips(c => c + winnings)
         console.log(playerChips)
-        setBetMade(false)
+        // setBetMade(false)
         setEndGame(true)
        
         
@@ -384,22 +393,71 @@ export const GameFunction = () => {
             alert("Not Enough Chips")
             return 
         }
+        if(betAmount === 0){
+            console.log(betAmount)   
+            alert('Please enter a bet')
+            return 
+        }
         else{
         console.log('place bet else')
         setPlayerChips(c => c - betAmount)
         console.log(playerChips)
-        setBetMade(true)
+        
+        
+        
         }
+        setBetMade(true)
+        
     }
 
    const startNewGame = () => {
-       setNewGame(true)
+       setEndGame(false)
        window.location.reload()
    }
 
    const resetChipsHandler = () => {
        setPlayerChips(1000)
        console.log(playerChips)
+   }
+
+   const dollarClick = () => {
+       if(!betMade){
+       setBetAmount(b => b + 1)
+       return 
+       }
+       else return 
+       
+   }
+
+   const fiveDollarClick = () => {
+        if(!betMade){
+        setBetAmount(b => b + 5)
+        }
+        if(betAmount > playerChips){
+            console.log('Not Enough Chips')
+        }
+        else return 
+   }
+
+   const twentyFiveDollarClick = () => {
+        if(!betMade){
+        setBetAmount(b => b + 25)
+        return 
+        }
+        else return 
+   }
+
+   const hundredDollarClick = () => {
+        if(!betMade){
+        setBetAmount(b => b + 100)
+        return 
+        }
+        else return 
+    }
+
+   const resetBet = () => {
+       setBetAmount(0)
+       return 
    }
     // console.log(playerCount, dealerCount, playerTurn, newGame, hitCardCount, playerBlackJack, dealerBlackJack)
 return(
@@ -423,31 +481,76 @@ return(
         <div id='playerhitcards' class='board-card-holder'></div>
         </div>
     </div>
-        <div id='p1' class='player'>Player: {playerCount}</div>
+        <div>Player: {playerCount}</div>
+        {/* Win or loss display */}
+        {/* {playerCount > 21 ? 
+            <h1>Player Busts!</h1> : <h1>Hit or Stay</h1>}
+        {!playerTurn && (playerCount > dealerCount) && dealerCount >= 17 && playerCount <= 21 ? 
+            <h1>Player Wins!</h1> : <h1>Hit or Stay</h1>} */}
+        {dealerCount > 21 ? 
+            <h1>Dealer Busts, Player Wins!</h1>: <div></div>}
+        {!playerTurn && dealerCount > playerCount && dealerCount <= 21 ? 
+            <h1>Dealer Wins!</h1>: <div></div>}
+        {dealerBlackJack ? 
+            <h1>BlackJack!</h1>: <div></div>}
+        {playerBlackJack ? 
+            <h1>BlackJack! Player Wins</h1>: <div></div>}
+        {playerBlackJack && dealerBlackJack ? 
+            <h1>Push</h1>: null}
+        {!playerTurn && playerCount === dealerCount && playerCount >= 17 && dealerCount >= 17 ? 
+            <h1>Push</h1> : null}
+        
         <div id="chip-total">Total Chips:{playerChips}</div>
-        {betMade ? <div id='wager-amount'>Wager Amount:{betAmount}</div> : null}
+        
+            <div id='wager-amount'>Wager Amount:{betAmount}</div>  
+            
 
-        {newGame ? <input type='number' 
-        onChange={betAmountHandler}
-        min='1'
-        max='500'>
-        </input> : null}
+        {/* {betMade ? 
+            <input disabled type='number' 
+            onChange={betAmountHandler}
+            min='1'
+            max={playerChips}>
+            </input> : 
+            <input type='number' 
+            onChange={betAmountHandler}
+            min='1'
+            max={playerChips}>
+            </input> } */}
+
     <div class='game-buttons'>
-        {!newGame ? null: <button onClick={placeBet}>Place Bet</button>}
-    {newGame ? <button id="Deal-Cards" class='playerbutton'onClick={dealCards}>Deal Cards</button>: null}
-    {!newGame & playerCount < 21 ? <button id="Draw-Button" class='playerbutton' onClick={hitHandler}>Hit</button>: null}
-    {!newGame & playerCount <= 21 ? <button id="Stay-Button" class='playerbutton' onClick={stayHandler}>Stay</button>: null}
-    <button onClick={startNewGame}>New Game</button>
+        <div>
+    {betMade ? 
+         <button disabled onClick={placeBet}>Place Bet</button>: <button onClick={placeBet}>Place Bet</button>}
+    {newGame && betMade ? 
+        <button id="Deal-Cards" class='playerbutton'onClick={dealCards}>Deal Cards</button>: 
+        <button disabled id="Deal-Cards" class='playerbutton'onClick={dealCards}>Deal Cards</button>}
+    {endGame ? 
+        <button onClick={startNewGame}>New Game</button> : 
+        <button disabled onClick={startNewGame}>New Game</button> }
+        </div>
+        
+        <div>
+    {!newGame && playerCount < 21 && !dealerBlackJack && !endGame ? 
+        <button id="Draw-Button" class='playerbutton' onClick={hitHandler}>Hit</button>:
+        <button disabled id="Draw-Button" class='playerbutton' onClick={hitHandler}>Hit</button>}
+    {!newGame && playerCount <= 21 && !playerBlackJack && !dealerBlackJack && !endGame? 
+        <button id="Stay-Button" class='playerbutton' onClick={stayHandler}>Stay</button>: 
+        <button disabled id="Stay-Button" class='playerbutton' onClick={stayHandler}>Stay</button>}
+        </div>
+    
     </div>
-    <button onClick={resetChipsHandler}>Reset Chips</button>
-    {playerCount > 21 ? <h1>Player Busts!</h1>:null}
-    {!playerTurn & (playerCount > dealerCount) & dealerCount >= 17 & playerCount <= 21 ? <h1>Player Wins!</h1>: null}
-    {dealerCount > 21 ? <h1>Dealer Busts, Player Wins!</h1>: null}
-    {!playerTurn & dealerCount > playerCount & dealerCount <= 21 ? <h1>Dealer Wins!</h1>: null}
-    {dealerBlackJack ? <h1>BlackJack!</h1>: null}
-    {playerBlackJack ? <h1>BlackJack! Player Wins</h1>: null}
-    {playerBlackJack & dealerBlackJack ? <h1>Push</h1>: null}
-    {!playerTurn & playerCount === dealerCount & playerCount >= 17 & dealerCount >= 17 ? <h1>Push</h1> : null}
+    <div class='chip-container'>
+    <div class='chip one-dollar' onClick={dollarClick}>$1</div>
+    <div class='chip five-dollar' onClick={fiveDollarClick}>$5</div>
+    <div class='chip twentyfive-dollar' onClick={twentyFiveDollarClick}>$25</div>
+    <div class='chip hundred-dollar' onClick={hundredDollarClick}>$100</div>
+    </div>
+    {betMade ? <button disabled onClick={resetBet}>Reset Bet</button>:
+                <button onClick={resetBet}>Reset Bet</button>}
+    {newGame ? <button onClick={resetChipsHandler}>Reset Chips</button>:
+    <button disabled onClick={resetChipsHandler}>Reset Chips</button>}
+
+
 
     
 </div>
