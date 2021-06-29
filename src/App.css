@@ -1,0 +1,100 @@
+/* #dc1{
+    display: none;
+} */
+:root{
+    background-color: green;
+}
+#gameboard{
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    align-items: center;
+    /* height:200px;
+    width: 500px */
+}
+
+#section{
+    display: flex;
+    margin: 10px
+    /* height: 150px; */
+    
+}
+
+.dealerCards , .playerCards{
+    display:flex;
+    flex-direction: row;
+}
+
+#dealerhitcards, #playerhitcards {
+    display:flex;
+    flex-direction: row;
+}
+
+
+.board-card-holder{
+    height: 150px;
+    width: 100px;
+    border: solid black 1px;
+}
+
+.game-buttons{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 5px;
+}
+
+.chip-container{
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+}
+
+.chip {
+    border-radius: 50%;
+    border: solid black 1px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+}
+
+.one-dollar{
+    background-color: white;
+}
+
+.five-dollar{
+    background-color: rgb(194, 26, 26);
+    color: white;
+}
+
+.twentyfive-dollar{
+    background-color: rgb(10, 92, 10);
+    color: white;
+}
+
+.hundred-dollar{
+    background-color: black;
+    color: white;
+}
+
+
+/* .playerbutton{
+    margin:5px
+} */
+
+img {
+    height:150px;
+    width: 100px;
+}
+
+.hidden-first-card{
+    display: none
+}
+
+h1{
+    text-align: center;
+}
