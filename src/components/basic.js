@@ -69,6 +69,8 @@ export const GameFunction = () => {
 
     const[playerCount, setPlayerCount] = useState(0)
     const[dealerCount, setDealerCount] = useState(0)
+    const[playerHit, setPlayerHit] = useState(false)
+    const[dealerHit, setDealerHit] = useState(false)
     const[playerTurn, setPlayerTurn] = useState(true)
     const[hitOrStay, setHitOrStay] = useState(false)
     const[newGame, setNewGame] = useState(true)
@@ -113,34 +115,12 @@ export const GameFunction = () => {
             stayHandler()
             setDoubleDown(false)
             return 
-            
-    
         }
         else{
             console.log('dd hit effect run')
             return
         }
     })
-
-    // useEffect(() => {
-    //     if(doubleDown){
-    //         stayHandler()
-    //         setPlayerCount (c => c += currentHitValue)
-    //         console.log('player count', playerCount)
-    //         console.log('CHV', currentHitValue)
-    //         console.log("DD effect run")
-            
-    //         return 
-    //     }
-    //     else{
-    //         console.log('dd else run')
-            
-            
-            
-            
-    //     }
-    // })
-
 
 
     const cardRandomizer = (deckCount) => {
@@ -349,6 +329,7 @@ export const GameFunction = () => {
         setPlayerAceCount(PACount)
         setPlayerAceBust(aceBust)
         setHitOrStay(true)
+        setPlayerHit(true)
         setCurrentHitValue(currentValue)
         console.log('double down', doubleDown)
         console.log('CV', currentValue)
@@ -403,6 +384,7 @@ export const GameFunction = () => {
         delete deck[card[0]]
         deckCount = Object.keys(deck).length
         setPlayerTurn(false)
+        setDealerHit(true)
 
         
         }
@@ -458,6 +440,7 @@ export const GameFunction = () => {
 
    const doubleDownHandler = () => {
        setBetAmount(b => b * 2)
+       setPlayerChips(c => c - betAmount)
        setDoubleDown(true)
        hitHandler()
        console.log(doubleDown)
@@ -527,7 +510,8 @@ return(
         {playerTurn ? <div id='dc1' class="hidden-first-card"></div>:
             <div id='dc1' class='board-card-holder'></div>}
         <div id='dc2' class='board-card-holder'></div>
-        <div id='dealerhitcards' class='board-card-holder'></div>
+        {playerTurn & !newGame ? <div id='dealerhitcards' class='back-card-image img board-card-holder'></div>:
+                    <div id='dealerhitcards' class='board-card-holder'></div>}
         </div>
         
     </div>
@@ -537,10 +521,13 @@ return(
         <div class='playerCards'>
         <div id='pc1' class='board-card-holder'> </div>
         <div id='pc2' class='board-card-holder'></div>
-        <div id='playerhitcards' class='board-card-holder'></div>
+        {!playerHit ? <div style={{display:'none'}} id='playerhitcards' class='board-card-holder'></div>: 
+                    <div id='playerhitcards' class='board-card-holder'></div>}
         </div>
     </div>
         <div>Player: {playerCount}</div>
+        {!endGame && !newGame ? <h1>Good Luck!</h1>: <h1>Please Place Bet</h1>}
+
         {dealerCount > 21 ? 
             <h1>Dealer Busts, Player Wins!</h1>: <div></div>}
         {!playerTurn && dealerCount > playerCount && dealerCount <= 21 ? 
