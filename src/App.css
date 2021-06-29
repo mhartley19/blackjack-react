@@ -92,7 +92,15 @@ img {
 }
 
 .hidden-first-card{
-    display: none
+    display: none;
+    
+}
+
+.back-card-image{
+    background-color: brown;
+    align-items: center;
+    justify-content: center;
+
 }
 
 h1{
