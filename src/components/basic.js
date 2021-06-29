@@ -85,6 +85,7 @@ export const GameFunction = () => {
     const[betMade, setBetMade] = useState(false)
     const[doubleDown, setDoubleDown] = useState(false)
     const[currentHitValue, setCurrentHitValue] = useState(0)
+    const[playerBust, setPlayerBust] = useState(false)
     // console.log(playerChips)
     console.log('double down', doubleDown)
     console.log('CHV', currentHitValue)
@@ -250,7 +251,7 @@ export const GameFunction = () => {
         setPlayerTurn(pTurn)
         setPlayerChips(c => c += winnings)
         setNewGame(false)
-        setEndGame(end)
+        setEndGame(false)
 
 
         
@@ -310,6 +311,7 @@ export const GameFunction = () => {
             console.log(pCount)
             console.log('Player busts, dealer wins')
             pTurn = false
+            playerBust(true)
             setEndGame(true)
             
         }
@@ -526,12 +528,14 @@ return(
         </div>
     </div>
         <div>Player: {playerCount}</div>
-        {!endGame && !newGame ? <h1>Good Luck!</h1>: <h1>Please Place Bet</h1>}
+        {!endGame && !newGame ? <h1>Good Luck!</h1>: <div></div>}
+        {endGame && !newGame ? <h1>Please Place Bet</h1>: <div></div>}
 
         {dealerCount > 21 ? 
             <h1>Dealer Busts, Player Wins!</h1>: <div></div>}
         {!playerTurn && dealerCount > playerCount && dealerCount <= 21 ? 
             <h1>Dealer Wins!</h1>: <div></div>}
+        {playerBust ? <h1>Player Busts</h1>: <div></div>}
         {dealerBlackJack ? 
             <h1>BlackJack!</h1>: <div></div>}
         {playerBlackJack ? 
