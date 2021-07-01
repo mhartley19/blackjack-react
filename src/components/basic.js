@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import '../css/basic.css'
 import cardImages from './cardImages/index.js'
+import Button from 'react-bootstrap/Button'
 
 
 
@@ -87,15 +88,18 @@ export const GameFunction = () => {
     const[currentHitValue, setCurrentHitValue] = useState(0)
     const[playerBust, setPlayerBust] = useState(false)
     // console.log(playerChips)
-    console.log('double down', doubleDown)
-    console.log('CHV', currentHitValue)
+    // console.log('double down', doubleDown)
+    // console.log('CHV', currentHitValue)
+    console.log(playerChips)
 
 
     useEffect(() => {
+
         const currentChips = window.localStorage.getItem('playerChips')
         setPlayerChips(currentChips)
         // console.log(currentChips)
         // console.log(playerChips)
+        console.log(playerChips)
 
         
 
@@ -115,10 +119,11 @@ export const GameFunction = () => {
         if(doubleDown){
             stayHandler()
             setDoubleDown(false)
+            console.log(playerChips)
             return 
         }
         else{
-            console.log('dd hit effect run')
+            // console.log('dd hit effect run')
             return
         }
     })
@@ -132,9 +137,10 @@ export const GameFunction = () => {
         let selectedKey = keys[randomNum]
         card.push(selectedKey)
         card.push(randomNum)
-        console.log('deck count' ,deckCount)
-        console.log("random num", randomNum)
-        console.log("card",card)
+        console.log(playerChips)
+        // console.log('deck count' ,deckCount)
+        // console.log("random num", randomNum)
+        // console.log("card",card)
         return card
     }
     const imageHelper = (playerCard, id) => {
@@ -158,6 +164,7 @@ export const GameFunction = () => {
         let dealerBJ = false
         let playerBJ = false
         let deckCount = Object.keys(deck).length
+        console.log(playerChips)
 
         // CARD 1
 
@@ -252,6 +259,8 @@ export const GameFunction = () => {
         setPlayerChips(c => c += winnings)
         setNewGame(false)
         setEndGame(false)
+        console.log(winnings)
+        console.log('player chips', playerChips)
 
 
         
@@ -260,6 +269,7 @@ export const GameFunction = () => {
     // console.log('ace counts', playerAceCount, dealerAceCount)
 
     const hitHandler = () => {
+        console.log(playerChips)
         let deckCount = Object.keys(deck).length
         // console.log('hit handler deck count', deckCount)
         let card = cardRandomizer(deckCount)
@@ -308,8 +318,8 @@ export const GameFunction = () => {
         
 
         if(pCount > 21){
-            console.log(pCount)
-            console.log('Player busts, dealer wins')
+            // console.log(pCount)
+            // console.log('Player busts, dealer wins')
             pTurn = false
             playerBust(true)
             setEndGame(true)
@@ -333,22 +343,24 @@ export const GameFunction = () => {
         setHitOrStay(true)
         setPlayerHit(true)
         setCurrentHitValue(currentValue)
-        console.log('double down', doubleDown)
-        console.log('CV', currentValue)
-        console.log('CHV', currentHitValue)
+        console.log(playerChips)
+        // console.log('double down', doubleDown)
+        // console.log('CV', currentValue)
+        // console.log('CHV', currentHitValue)
         
 
 
        
-        console.log('playercount', playerCount)
+        // console.log('playercount', playerCount)
        
     }
 
     const stayHandler = () => {
-        console.log('CHV', currentHitValue)
+        // console.log('CHV', currentHitValue)
+        console.log(playerChips)
         let deckCount = Object.keys(deck).length
         let pCount = playerCount
-        console.log('player count',playerCount)
+        // console.log('player count',playerCount)
         let dCount = dealerCount
         let DACount = dealerAceCount
         let aceBust = false
@@ -363,7 +375,7 @@ export const GameFunction = () => {
         
         if(hitCard === 11){
             DACount += 1
-            console.log(DACount)
+            // console.log(DACount)
             if(dCount > 21){
                 aceBust = true
             }
@@ -372,7 +384,7 @@ export const GameFunction = () => {
         if(!aceBust && dCount > 21 && DACount > 0){
             dCount -= 10
             aceBust = true
-            console.log(dCount, aceBust)
+            // console.log(dCount, aceBust)
         }
 
         if(aceBust && hitCard === 11){
@@ -393,13 +405,13 @@ export const GameFunction = () => {
 
         if(pCount > dCount | dCount > 21 && pCount <= 21){
             winnings += betAmount * 2
-            console.log('winnings', winnings)
+            // console.log('winnings', winnings)
 
         }
 
         if(pCount === dCount && dCount <= 21 && pCount <= 21){
             winnings += betAmount * 1
-            console.log("Push winnings", winnings)
+            // console.log("Push winnings", winnings)
         }
         setPlayerTurn(false)
         setPlayerCount(pCount)
@@ -409,6 +421,7 @@ export const GameFunction = () => {
         setHitOrStay(true)
         setDoubleDown(false)
         setEndGame(true)
+        console.log(playerChips)
         
        
         
@@ -416,20 +429,20 @@ export const GameFunction = () => {
 
     }
     const placeBet = () => {
-        console.log(betAmount)
+        // console.log(betAmount)
         console.log(playerChips)
         if(betAmount > playerChips){
-            console.log("place bet if")
+            // console.log("place bet if")
             alert("Not Enough Chips")
             return 
         }
         if(betAmount === 0){
-            console.log(betAmount)   
+            // console.log(betAmount)   
             alert('Please enter a bet')
             return 
         }
         else{
-        console.log('place bet else')
+        // console.log('place bet else')
         setPlayerChips(c => c - betAmount)
         console.log(playerChips)
         
@@ -445,7 +458,7 @@ export const GameFunction = () => {
        setPlayerChips(c => c - betAmount)
        setDoubleDown(true)
        hitHandler()
-       console.log(doubleDown)
+    //    console.log(doubleDown)
        
    }
 
@@ -453,6 +466,7 @@ export const GameFunction = () => {
    const startNewGame = () => {
        setEndGame(false)
        window.location.reload()
+       console.log(playerChips)
    }
 
    const resetChipsHandler = () => {
@@ -499,9 +513,9 @@ export const GameFunction = () => {
         }
        else return 
    }
-   console.log(playerCount)
-   console.log(doubleDown, betAmount)
-   console.log("player count", playerCount)
+   console.log(playerChips)
+//    console.log(doubleDown, betAmount)
+//    console.log("player count", playerCount)
     // console.log(playerCount, dealerCount, playerTurn, newGame, hitCardCount, playerBlackJack, dealerBlackJack)
 return(
     <div id='game-container'>
@@ -553,25 +567,25 @@ return(
     <div class='game-buttons'>
         <div>
     {betMade ? 
-         <button disabled onClick={placeBet}>Place Bet</button>: <button onClick={placeBet}>Place Bet</button>}
+         <Button disabled onClick={placeBet}>Place Bet</Button>: <Button onClick={placeBet}>Place Bet</Button>}
     {newGame && betMade ? 
-        <button id="Deal-Cards" class='playerbutton'onClick={dealCards}>Deal Cards</button>: 
-        <button disabled id="Deal-Cards" class='playerbutton'onClick={dealCards}>Deal Cards</button>}
+        <Button id="Deal-Cards" class='playerButton'onClick={dealCards}>Deal Cards</Button>: 
+        <Button disabled id="Deal-Cards" class='playerButton'onClick={dealCards}>Deal Cards</Button>}
     {endGame ? 
-        <button onClick={startNewGame}>New Game</button> : 
-        <button disabled onClick={startNewGame}>New Game</button> }
+        <Button onClick={startNewGame}>New Game</Button> : 
+        <Button disabled onClick={startNewGame}>New Game</Button> }
         </div>
         
         <div>
     {!newGame && playerCount < 21 && !dealerBlackJack && !endGame ? 
-        <button id="Draw-Button" class='playerbutton' onClick={hitHandler}>Hit</button>:
-        <button disabled id="Draw-Button" class='playerbutton' onClick={hitHandler}>Hit</button>}
+        <Button id="Draw-Button" class='playerButton' onClick={hitHandler}>Hit</Button>:
+        <Button disabled id="Draw-Button" class='playerButton' onClick={hitHandler}>Hit</Button>}
     {!newGame && playerCount <= 21 && !playerBlackJack && !dealerBlackJack && !endGame? 
-        <button id="Stay-Button" class='playerbutton' onClick={stayHandler}>Stay</button>: 
-        <button disabled id="Stay-Button" class='playerbutton' onClick={stayHandler}>Stay</button>}
+        <Button id="Stay-Button" class='playerButton' onClick={stayHandler}>Stay</Button>: 
+        <Button disabled id="Stay-Button" class='playerButton' onClick={stayHandler}>Stay</Button>}
         </div>
-    {doubleDown | newGame | hitOrStay ?  <button disabled>Double Down</button>:
-                    <button onClick={doubleDownHandler}>Double Down</button>}
+    {doubleDown | newGame | hitOrStay ?  <Button disabled>Double Down</Button>:
+                    <Button onClick={doubleDownHandler}>Double Down</Button>}
     
     </div>
     <div class='chip-container'>
@@ -580,10 +594,10 @@ return(
     <div class='chip twentyfive-dollar' onClick={twentyFiveDollarClick}>$25</div>
     <div class='chip hundred-dollar' onClick={hundredDollarClick}>$100</div>
     </div>
-    {betMade ? <button disabled onClick={resetBet}>Reset Bet</button>:
-                <button onClick={resetBet}>Reset Bet</button>}
-    {newGame ? <button onClick={resetChipsHandler}>Reset Chips</button>:
-    <button disabled onClick={resetChipsHandler}>Reset Chips</button>}
+    {betMade ? <Button disabled onClick={resetBet}>Reset Bet</Button>:
+                <Button onClick={resetBet}>Reset Bet</Button>}
+    {newGame ? <Button onClick={resetChipsHandler}>Reset Chips</Button>:
+    <Button disabled onClick={resetChipsHandler}>Reset Chips</Button>}
 
 </div>
 </div>
