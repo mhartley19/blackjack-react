@@ -1,7 +1,14 @@
-/* #dc1{
-    display: none;
-} */
+@import "~bootstrap/scss/bootstrap";
+
 :root{
+    background-color: green;
+}
+
+$Button{
+    'margin: 5px;
+}
+
+#game-container{
     background-color: green;
 }
 #gameboard{
@@ -9,6 +16,7 @@
     flex-direction: column;
     margin: 10px;
     align-items: center;
+    background-color: green;
     /* height:200px;
     width: 500px */
 }
