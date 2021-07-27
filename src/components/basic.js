@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import '../css/basic.css'
 import cardImages from './cardImages/index.js'
+import {Button, Alert}  from 'react-bootstrap'
+import CustomButton from './button'
+
 
 
 
@@ -85,16 +88,20 @@ export const GameFunction = () => {
     const[betMade, setBetMade] = useState(false)
     const[doubleDown, setDoubleDown] = useState(false)
     const[currentHitValue, setCurrentHitValue] = useState(0)
+    const[playerBust, setPlayerBust] = useState(false)
     // console.log(playerChips)
-    console.log('double down', doubleDown)
-    console.log('CHV', currentHitValue)
+    // console.log('double down', doubleDown)
+    // console.log('CHV', currentHitValue)
+    console.log(playerChips)
 
 
     useEffect(() => {
+
         const currentChips = window.localStorage.getItem('playerChips')
         setPlayerChips(currentChips)
         // console.log(currentChips)
         // console.log(playerChips)
+        console.log(playerChips)
 
         
 
@@ -114,10 +121,11 @@ export const GameFunction = () => {
         if(doubleDown){
             stayHandler()
             setDoubleDown(false)
+            console.log(playerChips)
             return 
         }
         else{
-            console.log('dd hit effect run')
+            // console.log('dd hit effect run')
             return
         }
     })
@@ -131,9 +139,10 @@ export const GameFunction = () => {
         let selectedKey = keys[randomNum]
         card.push(selectedKey)
         card.push(randomNum)
-        console.log('deck count' ,deckCount)
-        console.log("random num", randomNum)
-        console.log("card",card)
+        console.log(playerChips)
+        // console.log('deck count' ,deckCount)
+        // console.log("random num", randomNum)
+        // console.log("card",card)
         return card
     }
     const imageHelper = (playerCard, id) => {
@@ -157,6 +166,7 @@ export const GameFunction = () => {
         let dealerBJ = false
         let playerBJ = false
         let deckCount = Object.keys(deck).length
+        console.log(playerChips)
 
         // CARD 1
 
@@ -250,7 +260,9 @@ export const GameFunction = () => {
         setPlayerTurn(pTurn)
         setPlayerChips(c => c += winnings)
         setNewGame(false)
-        setEndGame(end)
+        setEndGame(false)
+        console.log(winnings)
+        console.log('player chips', playerChips)
 
 
         
@@ -259,6 +271,7 @@ export const GameFunction = () => {
     // console.log('ace counts', playerAceCount, dealerAceCount)
 
     const hitHandler = () => {
+        console.log(playerChips)
         let deckCount = Object.keys(deck).length
         // console.log('hit handler deck count', deckCount)
         let card = cardRandomizer(deckCount)
@@ -307,9 +320,10 @@ export const GameFunction = () => {
         
 
         if(pCount > 21){
-            console.log(pCount)
-            console.log('Player busts, dealer wins')
+            // console.log(pCount)
+            // console.log('Player busts, dealer wins')
             pTurn = false
+            setPlayerBust(true)
             setEndGame(true)
             
         }
@@ -331,22 +345,24 @@ export const GameFunction = () => {
         setHitOrStay(true)
         setPlayerHit(true)
         setCurrentHitValue(currentValue)
-        console.log('double down', doubleDown)
-        console.log('CV', currentValue)
-        console.log('CHV', currentHitValue)
+        console.log(playerChips)
+        // console.log('double down', doubleDown)
+        // console.log('CV', currentValue)
+        // console.log('CHV', currentHitValue)
         
 
 
        
-        console.log('playercount', playerCount)
+        // console.log('playercount', playerCount)
        
     }
 
     const stayHandler = () => {
-        console.log('CHV', currentHitValue)
+        // console.log('CHV', currentHitValue)
+        console.log(playerChips)
         let deckCount = Object.keys(deck).length
         let pCount = playerCount
-        console.log('player count',playerCount)
+        // console.log('player count',playerCount)
         let dCount = dealerCount
         let DACount = dealerAceCount
         let aceBust = false
@@ -361,7 +377,7 @@ export const GameFunction = () => {
         
         if(hitCard === 11){
             DACount += 1
-            console.log(DACount)
+            // console.log(DACount)
             if(dCount > 21){
                 aceBust = true
             }
@@ -370,7 +386,7 @@ export const GameFunction = () => {
         if(!aceBust && dCount > 21 && DACount > 0){
             dCount -= 10
             aceBust = true
-            console.log(dCount, aceBust)
+            // console.log(dCount, aceBust)
         }
 
         if(aceBust && hitCard === 11){
@@ -391,13 +407,13 @@ export const GameFunction = () => {
 
         if(pCount > dCount | dCount > 21 && pCount <= 21){
             winnings += betAmount * 2
-            console.log('winnings', winnings)
+            // console.log('winnings', winnings)
 
         }
 
         if(pCount === dCount && dCount <= 21 && pCount <= 21){
             winnings += betAmount * 1
-            console.log("Push winnings", winnings)
+            // console.log("Push winnings", winnings)
         }
         setPlayerTurn(false)
         setPlayerCount(pCount)
@@ -407,6 +423,7 @@ export const GameFunction = () => {
         setHitOrStay(true)
         setDoubleDown(false)
         setEndGame(true)
+        console.log(playerChips)
         
        
         
@@ -414,20 +431,20 @@ export const GameFunction = () => {
 
     }
     const placeBet = () => {
-        console.log(betAmount)
+        // console.log(betAmount)
         console.log(playerChips)
         if(betAmount > playerChips){
-            console.log("place bet if")
-            alert("Not Enough Chips")
+            // console.log("place bet if")
+            <Alert variant='primary'>"Not Enough Chips"</Alert>
             return 
         }
         if(betAmount === 0){
-            console.log(betAmount)   
-            alert('Please enter a bet')
+            // console.log(betAmount)   
+            <Alert variant='primary' show='true' dismissible='true'>Test</Alert>
             return 
         }
         else{
-        console.log('place bet else')
+        // console.log('place bet else')
         setPlayerChips(c => c - betAmount)
         console.log(playerChips)
         
@@ -443,7 +460,7 @@ export const GameFunction = () => {
        setPlayerChips(c => c - betAmount)
        setDoubleDown(true)
        hitHandler()
-       console.log(doubleDown)
+    //    console.log(doubleDown)
        
    }
 
@@ -451,11 +468,16 @@ export const GameFunction = () => {
    const startNewGame = () => {
        setEndGame(false)
        window.location.reload()
+       console.log(playerChips)
    }
 
    const resetChipsHandler = () => {
        setPlayerChips(1000)
        console.log(playerChips)
+   }
+
+   const addChipsHandler = () => {
+       setPlayerChips(c => c += 1000)
    }
 
    const dollarClick = () => {
@@ -497,26 +519,35 @@ export const GameFunction = () => {
         }
        else return 
    }
-   console.log(playerCount)
-   console.log(doubleDown, betAmount)
-   console.log("player count", playerCount)
+   console.log(playerChips)
+//    console.log(doubleDown, betAmount)
+//    console.log("player count", playerCount)
     // console.log(playerCount, dealerCount, playerTurn, newGame, hitCardCount, playerBlackJack, dealerBlackJack)
 return(
     <div id='game-container'>
-        <h1>BlackJack!</h1>
+        <div id='header'>
+        <h1 id="title">BlackJack!</h1>
+        <div id='title-bar-button-container'>
+        <CustomButton id="add-chips" onClick={addChipsHandler} text="Add Chips"/>
+        </div>
+        </div>
 <div id='gameboard'>
+<h2><strong>Dealer</strong></h2>
+{playerTurn ? <h4>Total:</h4>: 
+            <h4 id='dealer'>Total: <strong>{dealerCount}</strong> </h4> }
 <div id='section' class='dealer-card-section'>
         <div class='dealerCards'>
         {playerTurn ? <div id='dc1' class="hidden-first-card"></div>:
             <div id='dc1' class='board-card-holder'></div>}
         <div id='dc2' class='board-card-holder'></div>
-        {playerTurn & !newGame ? <div id='dealerhitcards' class='back-card-image img board-card-holder'></div>:
+        {playerTurn & !newGame & dealerCount < 17 ? <div id='dealerhitcards' class='back-card-image img board-card-holder'></div>:
                     <div id='dealerhitcards' class='board-card-holder'></div>}
         </div>
         
     </div>
-        {playerTurn ? null: 
-            <div id='dealer'>Dealer: {dealerCount} </div> }
+        
+    <h2><strong>Player</strong></h2>
+    <h4>Total: <strong>{playerCount}</strong></h4>
     <div id='section' class='player-card-section'>
         <div class='playerCards'>
         <div id='pc1' class='board-card-holder'> </div>
@@ -524,14 +555,26 @@ return(
         {!playerHit ? <div style={{display:'none'}} id='playerhitcards' class='board-card-holder'></div>: 
                     <div id='playerhitcards' class='board-card-holder'></div>}
         </div>
+        
+    <div id='player-buttons'>
+    {!newGame && playerCount < 21 && !dealerBlackJack && !endGame ? 
+        <CustomButton id="Draw-Button" class='playerButton' onClick={hitHandler} text='Hit'/>:
+        <CustomButton disabled='true' id="Draw-Button" class='playerButton' onClick={hitHandler} text='Hit'/>}
+    {!newGame && playerCount <= 21 && !playerBlackJack && !dealerBlackJack && !endGame? 
+        <CustomButton id="Stay-Button" class='playerButton' onClick={stayHandler} text="Stay"/>: 
+        <CustomButton disabled id="Stay-Button" class='playerButton' onClick={stayHandler} text="Stay"/>}
+    {doubleDown | newGame | hitOrStay ?  <CustomButton id='Double-Down-Button' disabled="true" text='Double Down'/>:
+                    <CustomButton id='Double-Down-Button' onClick={doubleDownHandler} text='Double Down'/>}
+        </div>
+        
     </div>
-        <div>Player: {playerCount}</div>
-        {!endGame && !newGame ? <h1>Good Luck!</h1>: <h1>Please Place Bet</h1>}
-
+        
+   
         {dealerCount > 21 ? 
             <h1>Dealer Busts, Player Wins!</h1>: <div></div>}
         {!playerTurn && dealerCount > playerCount && dealerCount <= 21 ? 
             <h1>Dealer Wins!</h1>: <div></div>}
+        {playerBust ? <h1>Player Busts</h1>: <div></div>}
         {dealerBlackJack ? 
             <h1>BlackJack!</h1>: <div></div>}
         {playerBlackJack ? 
@@ -541,45 +584,40 @@ return(
         {!playerTurn && playerCount === dealerCount && playerCount >= 17 && dealerCount >= 17 ? 
             <h1>Push</h1> : null}
         
-        <div id="chip-total">Total Chips:{playerChips}</div>
+        <h3 id="chip-total">Total Chips:{playerChips}</h3>
         
-            <div id='wager-amount'>Wager Amount:{betAmount}</div>  
+            <h3 id='wager-amount'>Wager Amount:{betAmount}</h3>  
 
-
+            </div>
     <div class='game-buttons'>
+        <div class='chip-container'>
+        <div class='chip one-dollar' onClick={dollarClick}>$1</div>
+        <div class='chip five-dollar' onClick={fiveDollarClick}>$5</div>
+        <div class='chip twentyfive-dollar' onClick={twentyFiveDollarClick}>$25</div>
+        <div class='chip hundred-dollar' onClick={hundredDollarClick}>$100</div>
+        </div>       
+    
+
         <div>
     {betMade ? 
-         <button disabled onClick={placeBet}>Place Bet</button>: <button onClick={placeBet}>Place Bet</button>}
+         <CustomButton id='place-bet' disabled='true' onClick={placeBet} text={betAmount}/>: 
+         <CustomButton onClick={placeBet} text="Place Bet"/>}
     {newGame && betMade ? 
-        <button id="Deal-Cards" class='playerbutton'onClick={dealCards}>Deal Cards</button>: 
-        <button disabled id="Deal-Cards" class='playerbutton'onClick={dealCards}>Deal Cards</button>}
+        <CustomButton id="Deal-Cards" class='playerButton' onClick={dealCards} text='Deal Cards'/>: 
+        <CustomButton disabled="true" id="Deal-Cards" class='playerButton' onClick={dealCards} text='Deal Cards'/>}
     {endGame ? 
-        <button onClick={startNewGame}>New Game</button> : 
-        <button disabled onClick={startNewGame}>New Game</button> }
+        <CustomButton onClick={startNewGame} text='New Game'/>: 
+        <CustomButton disabled='true' onClick={startNewGame} text='New Game'/> }
         </div>
         
-        <div>
-    {!newGame && playerCount < 21 && !dealerBlackJack && !endGame ? 
-        <button id="Draw-Button" class='playerbutton' onClick={hitHandler}>Hit</button>:
-        <button disabled id="Draw-Button" class='playerbutton' onClick={hitHandler}>Hit</button>}
-    {!newGame && playerCount <= 21 && !playerBlackJack && !dealerBlackJack && !endGame? 
-        <button id="Stay-Button" class='playerbutton' onClick={stayHandler}>Stay</button>: 
-        <button disabled id="Stay-Button" class='playerbutton' onClick={stayHandler}>Stay</button>}
-        </div>
-    {doubleDown | newGame | hitOrStay ?  <button disabled>Double Down</button>:
-                    <button onClick={doubleDownHandler}>Double Down</button>}
+
     
-    </div>
-    <div class='chip-container'>
-    <div class='chip one-dollar' onClick={dollarClick}>$1</div>
-    <div class='chip five-dollar' onClick={fiveDollarClick}>$5</div>
-    <div class='chip twentyfive-dollar' onClick={twentyFiveDollarClick}>$25</div>
-    <div class='chip hundred-dollar' onClick={hundredDollarClick}>$100</div>
-    </div>
-    {betMade ? <button disabled onClick={resetBet}>Reset Bet</button>:
-                <button onClick={resetBet}>Reset Bet</button>}
-    {newGame ? <button onClick={resetChipsHandler}>Reset Chips</button>:
-    <button disabled onClick={resetChipsHandler}>Reset Chips</button>}
+    
+    
+    {betMade ? <CustomButton disabled='true' onClick={resetBet} text='Reset Bet'/>:
+                <CustomButton onClick={resetBet} text='Reset Bet'/>}
+    {newGame ? <CustomButton onClick={resetChipsHandler} text='Reset Chips'/>:
+    <CustomButton disabled='true' onClick={resetChipsHandler}text='Reset Chip'/>}
 
 </div>
 </div>
