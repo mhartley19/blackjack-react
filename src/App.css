@@ -1,12 +1,10 @@
-@import "~bootstrap/scss/bootstrap";
+/* @import "~bootstrap/scss/bootstrap"; */
 
 :root{
     background-color: green;
 }
 
-$Button{
-    'margin: 5px;
-}
+
 
 #game-container{
     background-color: green;
@@ -28,6 +26,50 @@ $Button{
     
 }
 
+
+
+#add-chips{
+    text-align: right
+   
+}
+
+#header{
+    display: flex;
+    height: 100px;
+    background-color: coral;
+    justify-content: center;
+    align-items: center;
+}
+
+#title{
+    font-size: 60px;
+    font-weight: bold;
+    
+}
+
+#title-bar-button-container{
+    position: absolute;
+    margin-left: 500px;
+    
+
+}
+
+#player-buttons{
+    display: flex;
+    justify-content: space-around;
+    width: 100px;
+    
+   
+}
+
+#Draw-Button, #Stay-Button, #Double-Down-Button{
+    margin: 3px;
+    width: 100px;
+}
+
+
+
+
 .dealerCards , .playerCards{
     display:flex;
     flex-direction: row;
@@ -38,11 +80,18 @@ $Button{
     flex-direction: row;
 }
 
+.player-card-section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 
 .board-card-holder{
     height: 150px;
     width: 100px;
     border: solid black 1px;
+
 }
 
 .game-buttons{
@@ -88,6 +137,8 @@ $Button{
     background-color: black;
     color: white;
 }
+
+
 
 
 /* .playerbutton{

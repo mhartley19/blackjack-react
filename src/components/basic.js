@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import '../css/basic.css'
 import cardImages from './cardImages/index.js'
-import Button from 'react-bootstrap/Button'
+import {Button, Alert}  from 'react-bootstrap'
+import CustomButton from './button'
+
 
 
 
@@ -321,7 +323,7 @@ export const GameFunction = () => {
             // console.log(pCount)
             // console.log('Player busts, dealer wins')
             pTurn = false
-            playerBust(true)
+            setPlayerBust(true)
             setEndGame(true)
             
         }
@@ -433,12 +435,12 @@ export const GameFunction = () => {
         console.log(playerChips)
         if(betAmount > playerChips){
             // console.log("place bet if")
-            alert("Not Enough Chips")
+            <Alert variant='primary'>"Not Enough Chips"</Alert>
             return 
         }
         if(betAmount === 0){
             // console.log(betAmount)   
-            alert('Please enter a bet')
+            <Alert variant='primary' show='true' dismissible='true'>Test</Alert>
             return 
         }
         else{
@@ -472,6 +474,10 @@ export const GameFunction = () => {
    const resetChipsHandler = () => {
        setPlayerChips(1000)
        console.log(playerChips)
+   }
+
+   const addChipsHandler = () => {
+       setPlayerChips(c => c += 1000)
    }
 
    const dollarClick = () => {
@@ -519,20 +525,29 @@ export const GameFunction = () => {
     // console.log(playerCount, dealerCount, playerTurn, newGame, hitCardCount, playerBlackJack, dealerBlackJack)
 return(
     <div id='game-container'>
-        <h1>BlackJack!</h1>
+        <div id='header'>
+        <h1 id="title">BlackJack!</h1>
+        <div id='title-bar-button-container'>
+        <CustomButton id="add-chips" onClick={addChipsHandler} text="Add Chips"/>
+        </div>
+        </div>
 <div id='gameboard'>
+<h2><strong>Dealer</strong></h2>
+{playerTurn ? <h4>Total:</h4>: 
+            <h4 id='dealer'>Total: <strong>{dealerCount}</strong> </h4> }
 <div id='section' class='dealer-card-section'>
         <div class='dealerCards'>
         {playerTurn ? <div id='dc1' class="hidden-first-card"></div>:
             <div id='dc1' class='board-card-holder'></div>}
         <div id='dc2' class='board-card-holder'></div>
-        {playerTurn & !newGame ? <div id='dealerhitcards' class='back-card-image img board-card-holder'></div>:
+        {playerTurn & !newGame & dealerCount < 17 ? <div id='dealerhitcards' class='back-card-image img board-card-holder'></div>:
                     <div id='dealerhitcards' class='board-card-holder'></div>}
         </div>
         
     </div>
-        {playerTurn ? null: 
-            <div id='dealer'>Dealer: {dealerCount} </div> }
+        
+    <h2><strong>Player</strong></h2>
+    <h4>Total: <strong>{playerCount}</strong></h4>
     <div id='section' class='player-card-section'>
         <div class='playerCards'>
         <div id='pc1' class='board-card-holder'> </div>
@@ -540,11 +555,21 @@ return(
         {!playerHit ? <div style={{display:'none'}} id='playerhitcards' class='board-card-holder'></div>: 
                     <div id='playerhitcards' class='board-card-holder'></div>}
         </div>
+        
+    <div id='player-buttons'>
+    {!newGame && playerCount < 21 && !dealerBlackJack && !endGame ? 
+        <CustomButton id="Draw-Button" class='playerButton' onClick={hitHandler} text='Hit'/>:
+        <CustomButton disabled='true' id="Draw-Button" class='playerButton' onClick={hitHandler} text='Hit'/>}
+    {!newGame && playerCount <= 21 && !playerBlackJack && !dealerBlackJack && !endGame? 
+        <CustomButton id="Stay-Button" class='playerButton' onClick={stayHandler} text="Stay"/>: 
+        <CustomButton disabled id="Stay-Button" class='playerButton' onClick={stayHandler} text="Stay"/>}
+    {doubleDown | newGame | hitOrStay ?  <CustomButton id='Double-Down-Button' disabled="true" text='Double Down'/>:
+                    <CustomButton id='Double-Down-Button' onClick={doubleDownHandler} text='Double Down'/>}
+        </div>
+        
     </div>
-        <div>Player: {playerCount}</div>
-        {!endGame && !newGame ? <h1>Good Luck!</h1>: <div></div>}
-        {endGame && !newGame ? <h1>Please Place Bet</h1>: <div></div>}
-
+        
+   
         {dealerCount > 21 ? 
             <h1>Dealer Busts, Player Wins!</h1>: <div></div>}
         {!playerTurn && dealerCount > playerCount && dealerCount <= 21 ? 
@@ -559,45 +584,40 @@ return(
         {!playerTurn && playerCount === dealerCount && playerCount >= 17 && dealerCount >= 17 ? 
             <h1>Push</h1> : null}
         
-        <div id="chip-total">Total Chips:{playerChips}</div>
+        <h3 id="chip-total">Total Chips:{playerChips}</h3>
         
-            <div id='wager-amount'>Wager Amount:{betAmount}</div>  
+            <h3 id='wager-amount'>Wager Amount:{betAmount}</h3>  
 
-
+            </div>
     <div class='game-buttons'>
+        <div class='chip-container'>
+        <div class='chip one-dollar' onClick={dollarClick}>$1</div>
+        <div class='chip five-dollar' onClick={fiveDollarClick}>$5</div>
+        <div class='chip twentyfive-dollar' onClick={twentyFiveDollarClick}>$25</div>
+        <div class='chip hundred-dollar' onClick={hundredDollarClick}>$100</div>
+        </div>       
+    
+
         <div>
     {betMade ? 
-         <Button disabled onClick={placeBet}>Place Bet</Button>: <Button onClick={placeBet}>Place Bet</Button>}
+         <CustomButton id='place-bet' disabled='true' onClick={placeBet} text={betAmount}/>: 
+         <CustomButton onClick={placeBet} text="Place Bet"/>}
     {newGame && betMade ? 
-        <Button id="Deal-Cards" class='playerButton'onClick={dealCards}>Deal Cards</Button>: 
-        <Button disabled id="Deal-Cards" class='playerButton'onClick={dealCards}>Deal Cards</Button>}
+        <CustomButton id="Deal-Cards" class='playerButton' onClick={dealCards} text='Deal Cards'/>: 
+        <CustomButton disabled="true" id="Deal-Cards" class='playerButton' onClick={dealCards} text='Deal Cards'/>}
     {endGame ? 
-        <Button onClick={startNewGame}>New Game</Button> : 
-        <Button disabled onClick={startNewGame}>New Game</Button> }
+        <CustomButton onClick={startNewGame} text='New Game'/>: 
+        <CustomButton disabled='true' onClick={startNewGame} text='New Game'/> }
         </div>
         
-        <div>
-    {!newGame && playerCount < 21 && !dealerBlackJack && !endGame ? 
-        <Button id="Draw-Button" class='playerButton' onClick={hitHandler}>Hit</Button>:
-        <Button disabled id="Draw-Button" class='playerButton' onClick={hitHandler}>Hit</Button>}
-    {!newGame && playerCount <= 21 && !playerBlackJack && !dealerBlackJack && !endGame? 
-        <Button id="Stay-Button" class='playerButton' onClick={stayHandler}>Stay</Button>: 
-        <Button disabled id="Stay-Button" class='playerButton' onClick={stayHandler}>Stay</Button>}
-        </div>
-    {doubleDown | newGame | hitOrStay ?  <Button disabled>Double Down</Button>:
-                    <Button onClick={doubleDownHandler}>Double Down</Button>}
+
     
-    </div>
-    <div class='chip-container'>
-    <div class='chip one-dollar' onClick={dollarClick}>$1</div>
-    <div class='chip five-dollar' onClick={fiveDollarClick}>$5</div>
-    <div class='chip twentyfive-dollar' onClick={twentyFiveDollarClick}>$25</div>
-    <div class='chip hundred-dollar' onClick={hundredDollarClick}>$100</div>
-    </div>
-    {betMade ? <Button disabled onClick={resetBet}>Reset Bet</Button>:
-                <Button onClick={resetBet}>Reset Bet</Button>}
-    {newGame ? <Button onClick={resetChipsHandler}>Reset Chips</Button>:
-    <Button disabled onClick={resetChipsHandler}>Reset Chips</Button>}
+    
+    
+    {betMade ? <CustomButton disabled='true' onClick={resetBet} text='Reset Bet'/>:
+                <CustomButton onClick={resetBet} text='Reset Bet'/>}
+    {newGame ? <CustomButton onClick={resetChipsHandler} text='Reset Chips'/>:
+    <CustomButton disabled='true' onClick={resetChipsHandler}text='Reset Chip'/>}
 
 </div>
 </div>
