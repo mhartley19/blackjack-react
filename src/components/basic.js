@@ -358,11 +358,9 @@ export const GameFunction = () => {
     }
 
     const stayHandler = () => {
-        // console.log('CHV', currentHitValue)
         console.log(playerChips)
         let deckCount = Object.keys(deck).length
         let pCount = playerCount
-        // console.log('player count',playerCount)
         let dCount = dealerCount
         let DACount = dealerAceCount
         let aceBust = false
@@ -374,6 +372,7 @@ export const GameFunction = () => {
         let card = cardRandomizer(deckCount)
         let hitCard = deck[card[0]]
         dCount += hitCard
+        setDealerHit(true)
         
         if(hitCard === 11){
             DACount += 1
@@ -477,7 +476,7 @@ export const GameFunction = () => {
    }
 
    const addChipsHandler = () => {
-       setPlayerChips(c => c += 1000)
+       setPlayerChips(c => c + 1000)
    }
 
    const dollarClick = () => {
@@ -528,7 +527,7 @@ return(
         <div id='header'>
         <h1 id="title">BlackJack!</h1>
         <div id='title-bar-button-container'>
-        <CustomButton id="add-chips" onClick={addChipsHandler} text="Add Chips"/>
+        
         </div>
         </div>
 <div id='gameboard'>
@@ -540,8 +539,8 @@ return(
         {playerTurn ? <div id='dc1' class="hidden-first-card"></div>:
             <div id='dc1' class='board-card-holder'></div>}
         <div id='dc2' class='board-card-holder'></div>
-        {playerTurn & !newGame & dealerCount < 17 ? <div id='dealerhitcards' class='back-card-image img board-card-holder'></div>:
-                    <div id='dealerhitcards' class='board-card-holder'></div>}
+        {playerTurn & !newGame & !dealerHit ? <div id='dealerhitcards' class='back-card-image img board-card-holder'></div>:
+                    <div display none id='dealerhitcards' class='board-card-holder'></div>}
         </div>
         
     </div>
@@ -618,6 +617,7 @@ return(
                 <CustomButton onClick={resetBet} text='Reset Bet'/>}
     {newGame ? <CustomButton onClick={resetChipsHandler} text='Reset Chips'/>:
     <CustomButton disabled='true' onClick={resetChipsHandler}text='Reset Chip'/>}
+    <CustomButton id="add-chips" onClick={addChipsHandler} text="Add Chips"/>
 
 </div>
 </div>
