@@ -260,7 +260,7 @@ export const GameFunction = () => {
         setPlayerTurn(pTurn)
         setPlayerChips(c => c += winnings)
         setNewGame(false)
-        setEndGame(false)
+        setEndGame(end)
         console.log(winnings)
         console.log('player chips', playerChips)
 
@@ -568,7 +568,8 @@ return(
         
     </div>
         
-   
+        {playerCount > dealerCount && playerCount <= 21 && !playerBlackJack && !playerTurn ? 
+            <h1>Player Wins!</h1>: <div></div>}
         {dealerCount > 21 ? 
             <h1>Dealer Busts, Player Wins!</h1>: <div></div>}
         {!playerTurn && dealerCount > playerCount && dealerCount <= 21 ? 
